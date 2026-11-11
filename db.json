@@ -1,0 +1,14 @@
+{
+  "students": [
+    {
+      "id": "0bcb2ba5-ece4-4265-a77b-5bc01358a3a6",
+      "createdAt": "2026-11-11T13:33:46.905Z",
+      "name": "Sakramo",
+      "level": "secondary",
+      "grade": "S1",
+      "lang": "fr"
+    }
+  ],
+  "quizzes": {},
+  "results": []
+}

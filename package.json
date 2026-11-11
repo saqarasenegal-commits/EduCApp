@@ -1,0 +1,25 @@
+{
+  "name": "educapp",
+  "version": "1.0.0",
+  "description": "AI Classroom Home Tutor (EN/FR)",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "dev": "node --watch --env-file-if-exists=.env server/index.js",
+    "postinstall": "node scripts/copy-vendor.js",
+    "build": "node scripts/copy-vendor.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.8.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "express": "^5.3.0",
+    "marked": "^18.2.0",
+    "zod": "^4.6.7"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

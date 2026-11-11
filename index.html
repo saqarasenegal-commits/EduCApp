@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduCApp — AI Home Tutor</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🎓</span>
+      <div>
+        <strong>EduCApp</strong>
+        <small data-i18n="tagline"></small>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <label class="learner-select">
+        <span data-i18n="learner"></span>
+        <select id="studentSelect"></select>
+      </label>
+      <button id="addStudentBtn" class="btn ghost" data-i18n="addLearner"></button>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button data-lang="fr">FR</button>
+        <button data-lang="en">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- ===== Setup panel ===== -->
+    <aside class="panel setup">
+      <h2 data-i18n="chooseLesson"></h2>
+
+      <label class="field">
+        <span data-i18n="level"></span>
+        <select id="levelSelect"></select>
+      </label>
+      <label class="field">
+        <span data-i18n="class"></span>
+        <select id="gradeSelect"></select>
+      </label>
+
+      <div class="field">
+        <span data-i18n="subject"></span>
+        <div id="subjectGrid" class="subject-grid"></div>
+      </div>
+
+      <div class="field">
+        <span data-i18n="topic"></span>
+        <div id="topicChips" class="chips"></div>
+        <input id="topicInput" type="text" maxlength="200" />
+      </div>
+
+      <div class="field">
+        <span data-i18n="difficulty"></span>
+        <div class="segmented" id="difficultyToggle">
+          <button data-diff="basic" data-i18n="basic"></button>
+          <button data-diff="advanced" data-i18n="advanced"></button>
+        </div>
+      </div>
+
+      <div class="field">
+        <span data-i18n="teachingLanguage"></span>
+        <div class="segmented" id="contentLangToggle">
+          <button data-clang="fr">Français</button>
+          <button data-clang="en">English</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ===== Workspace ===== -->
+    <section class="workspace">
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-tab="lesson">📘 <span data-i18n="tabLesson"></span></button>
+        <button class="tab" data-tab="quiz">📝 <span data-i18n="tabQuiz"></span></button>
+        <button class="tab" data-tab="progress">📈 <span data-i18n="tabProgress"></span></button>
+      </nav>
+
+      <!-- Lesson -->
+      <div class="tabpane active" id="pane-lesson">
+        <div class="pane-head">
+          <div id="lessonHeading" class="context-line"></div>
+          <button id="startLessonBtn" class="btn primary" data-i18n="startLesson"></button>
+        </div>
+        <article id="lessonOutput" class="markdown card empty"></article>
+
+        <div id="chatBox" class="chat card hidden">
+          <h3>💬 <span data-i18n="askTutor"></span></h3>
+          <div id="chatLog" class="chat-log"></div>
+          <form id="chatForm" class="chat-form">
+            <input id="chatInput" type="text" autocomplete="off" />
+            <button class="btn primary" data-i18n="send"></button>
+          </form>
+          <div class="chat-actions">
+            <button id="lessonToQuizBtn" class="btn ghost" data-i18n="testMe"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quiz -->
+      <div class="tabpane" id="pane-quiz">
+        <div class="pane-head">
+          <div id="quizHeading" class="context-line"></div>
+          <div class="row">
+            <label class="inline">
+              <span data-i18n="numQuestions"></span>
+              <select id="quizCount">
+                <option>5</option><option selected>8</option><option>10</option><option>15</option>
+              </select>
+            </label>
+            <button id="genQuizBtn" class="btn primary" data-i18n="generateQuiz"></button>
+          </div>
+        </div>
+        <div id="quizArea" class="card empty"></div>
+      </div>
+
+      <!-- Progress -->
+      <div class="tabpane" id="pane-progress">
+        <div class="pane-head">
+          <div id="progressHeading" class="context-line"></div>
+          <button id="reportBtn" class="btn primary" data-i18n="aiReport"></button>
+        </div>
+        <div id="progressArea"></div>
+        <article id="reportOutput" class="markdown card hidden"></article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add learner dialog -->
+  <dialog id="studentDialog">
+    <form method="dialog" id="studentForm">
+      <h3 data-i18n="newLearner"></h3>
+      <label class="field"><span data-i18n="name"></span><input name="name" required maxlength="60" /></label>
+      <label class="field"><span data-i18n="level"></span><select name="level"></select></label>
+      <label class="field"><span data-i18n="class"></span><select name="grade"></select></label>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn ghost" formnovalidate data-i18n="cancel"></button>
+        <button value="ok" class="btn primary" data-i18n="create"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Access code screen (only when the server has ACCESS_CODE set) -->
+  <div id="loginScreen" class="login-screen hidden">
+    <form id="loginForm" class="login-card">
+      <div class="logo">🎓</div>
+      <h2>EduCApp</h2>
+      <p data-i18n="loginIntro"></p>
+      <input id="loginCode" type="password" autocomplete="current-password" required />
+      <p id="loginError" class="login-error hidden" data-i18n="wrongCode"></p>
+      <button class="btn primary" data-i18n="enter"></button>
+    </form>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
